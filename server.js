@@ -19,6 +19,7 @@ app.get('/spawn', async (req, res) => {
     child.stderr.on('data', (data) => {
         console.error(`child stderr:\n${data}`);
     });
+    res.send(port.toString());
 });
 
 app.get('/ps', async (req, res) => {

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
+    <title>Servers</title>
+</head>
+
+<body>
+    <ul id="serverlist">
+
+    </ul>
+</body>
+
+<script>
+    var socket = io();
+    socket.emit('getservers');
+    socket.on('serverupdate', (list) => {
+        var lihtml = '';
+        list.forEach(server => {
+            li += '<li>' + server + '</li>';
+        });
+        document.getElementById("serverlist").innerHTML = lihtml;
+    });
+</script>
+
+</html>

@@ -3,7 +3,6 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 const { spawn } = require('child_process');
-const psList = require('ps-list');
 const getPort = require('get-port');
 
 var servers = [];
@@ -20,12 +19,6 @@ app.get('/spawn', async (req, res) => {
     console.log('started server on port ' + port);
 
     res.send(port.toString());
-});
-
-app.get('/ps', async (req, res) => {
-    var pslist = await psList();
-    pslist = pslist.filter(ps => ps.name === 'multitd.x86_64')
-    res.send(pslist)
 });
 
 app.get('/servers', (req, res) => {

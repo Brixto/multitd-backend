@@ -21,7 +21,7 @@
     socket.on('serverupdate', (list) => {
         var lihtml = '';
         list.forEach(server => {
-            lihtml += '<li>' + server + '</li>';
+            lihtml += '<li>' + server.port + ' status: ' + server.status + '</li>';
         });
         document.getElementById("serverlist").innerHTML = lihtml;
     });

@@ -35,9 +35,7 @@ app.get('/servers', (req, res) => {
 io.on('connection', socket => {
     console.log('instance connected');
     socket.on('started', (port) => {
-        servers.forEach(s => {
-            if (s.port === port) s.status = 'started';
-        })
+        getServer(port).status = 'started';
         socket.emit('serverupdate', servers);
         console.log('instance started');
     });
@@ -45,7 +43,18 @@ io.on('connection', socket => {
     socket.on('getservers', () => {
         socket.emit('serverupdate', servers);
     });
+
+    // socket.on('gameend', (port) => {
+    //     server = getServer(port).child;
+    //     server.kill();
+    // });
 })
+
+function getServer(port) {
+    servers.forEach(server => {
+        if (server.port === port) return server;
+    });
+}
 
 http.listen(3000, function () {
     console.log('Example app listening on port 3000!');

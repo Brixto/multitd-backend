@@ -16,16 +16,7 @@ app.get('/spawn', async (req, res) => {
     console.log('spawn');
     var port = await getPort({ port: getPort.makeRange(3001, 3200) })
     const child = spawn('/src/multitd-build/multitd.x86_64', ['-batchmode', '-nographics', '-port', port]);
-
-    servers.push({ status: 'pending', port: port });
-
-    child.stdout.on('data', (data) => {
-        console.log(`${data}`);
-    });
-
-    child.stderr.on('data', (data) => {
-        console.error(`child stderr:\n${data}`);
-    });
+    servers.push({ server: child, status: 'pending', port: port });
     res.send(port.toString());
 });
 

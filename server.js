@@ -13,10 +13,12 @@ app.get('/', function (req, res) {
 });
 
 app.get('/spawn', async (req, res) => {
-    console.log('spawn');
     var port = await getPort({ port: getPort.makeRange(3001, 3200) })
     const child = spawn('/src/multitd-build/multitd.x86_64', ['-batchmode', '-nographics', '-port', port]);
     servers.push({ server: child, status: 'pending', port: port });
+
+    console.log('started server on port ' + port);
+
     res.send(port.toString());
 });
 

@@ -45,6 +45,8 @@ io.on('connection', socket => {
     //     server = getServer(port).child;
     //     server.kill();
     // });
+    console.log('connected');
+    socket.emit('spawn', '-8', '0');
 });
 
 function getServer(port) {

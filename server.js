@@ -4,8 +4,53 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 const { spawn } = require('child_process');
 const getPort = require('get-port');
+var PF = require('pathfinding');
 
 var servers = [];
+
+var spawnPoint = { x: 0, y: 0 };
+var destination = { x: 1, y: 1 };
+var minion = spawnPoint;
+
+var grid = new PF.Grid(16, 16);
+var finder = new PF.AStarFinder();
+var path = finder.findPath(spawnPoint.x, spawnPoint.y, destination.x, destination.y, grid);
+
+for (i = 0; i < path.length; ++i) {
+    console.log(path[i][0]);
+}
+
+console.log(path)
+console.log(path[1]);
+
+setInterval(() => moveTowards(minion, pathToVector(path[1])), 1000 / 1);
+
+function pathToVector(path) {
+    return { x: path[0], y: path[1] };
+}
+
+function moveTowards(current, destination, maxDistance) {
+    let speed = 0.1;
+    let dx = (destination.x - current.x);
+    let dy = (destination.y - current.y);
+
+    let angle = Math.atan2(dy, dx);
+    let velX = Math.cos(angle) * speed;
+    let velY = Math.sin(angle) * speed;
+
+    // check if overshooting target
+    if (dx * dx + dy * dy < speed * speed) {
+        velX = dx;
+        velY = dy;
+    }
+    current.x = current.x += velX;
+    current.y = current.y += velY;
+    console.log(current);
+}
+
+function lerp(start, end, amt) {
+    return (1 - amt) * start + amt * end
+}
 
 app.get('/', function (req, res) {
     res.send('Hello World');
@@ -46,7 +91,12 @@ io.on('connection', socket => {
     //     server.kill();
     // });
     console.log('connected');
-    socket.emit('spawn', '-8', '0');
+    socket.emit('spawn', '0', '0');
+
+    setInterval(() => {
+        //path[0].
+        //socket.emit('update')
+    }, 1000);
 });
 
 function getServer(port) {

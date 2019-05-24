@@ -13,6 +13,7 @@
     "express": "^4.16.2",
     "get-port": "^5.0.0",
     "nodemon": "^1.18.11",
+    "pathfinding": "^0.4.18",
     "socket.io": "^2.2.0"
   }
 }

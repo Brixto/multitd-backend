@@ -14,6 +14,7 @@
     "get-port": "^5.0.0",
     "nodemon": "^1.18.11",
     "pathfinding": "^0.4.18",
+    "shortid": "^2.2.14",
     "socket.io": "^2.2.0"
   }
 }

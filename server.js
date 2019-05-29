@@ -8,8 +8,8 @@ const shortid = require('shortid');
 var PF = require('pathfinding');
 const Vector2 = require('./vector2');
 
-var spawnPoint = new Vector2(0, 0);
-var destination = new Vector2(8, 3);
+// var spawnPoint = new Vector2(0, 0);
+// var destination = new Vector2(8, 3);
 
 var grid = new PF.Grid(18, 28);
 var finder = new PF.AStarFinder({ allowDiagonal: true });
@@ -70,7 +70,7 @@ function moveLoop() {
     for (var minion of minions) {
         if (minion.i < minion.path.length) {
             var nextPoint = pathToVector(minion.path[minion.i])
-            Vector2.moveTowards(minion, nextPoint, 0.1);
+            Vector2.moveTowards(minion, nextPoint, 0.02);
 
             if (minion.x == nextPoint.x && minion.y == nextPoint.y) {
                 minion.i += 1;

@@ -13,22 +13,16 @@ const Vector2 = require('./vector2');
 
 var grid = new PF.Grid(18, 28);
 var finder = new PF.AStarFinder({ allowDiagonal: true });
-//var path = finder.findPath(spawnPoint.x, spawnPoint.y, destination.x, destination.y, grid);
 
 const moveFPS = 60;
 const updateTime = 10;
-
-// for (i = 0; i < path.length; ++i) {
-//     console.log(path[i][0]);
-// }
-
-// console.log(path)
-// console.log(path[1]);
 
 var minions = [];
 
 spawnMinion();
 setInterval(spawnMinion, 1000);
+
+var lastUpdate = Date.now();
 setInterval(moveLoop, 1000 / moveFPS);
 
 setInterval(updateLoop, 1000 / updateTime);
@@ -67,16 +61,19 @@ function updateLoop() {
     if (minions.length > 0) {
         var clonedArray = JSON.parse(JSON.stringify(minions))
         clonedArray.forEach(m => delete m.path);
-        console.log(minions.length);
         io.sockets.emit('update', clonedArray);
     }
 }
 
+
 function moveLoop() {
+    var now = Date.now();
+    var dt = now - lastUpdate;
+    lastUpdate = now;
     for (var minion of minions) {
         if (minion.i < minion.path.length) {
             var nextPoint = pathToVector(minion.path[minion.i])
-            Vector2.moveTowards(minion, nextPoint, 0.02);
+            Vector2.moveTowards(minion, nextPoint, 0.002 * dt);
 
             if (minion.x == nextPoint.x && minion.y == nextPoint.y) {
                 minion.i += 1;

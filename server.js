@@ -28,7 +28,7 @@ const updateTime = 10;
 var minions = [];
 
 spawnMinion();
-setInterval(spawnMinion, 100);
+setInterval(spawnMinion, 1000);
 setInterval(moveLoop, 1000 / moveFPS);
 
 setInterval(updateLoop, 1000 / updateTime);
@@ -40,6 +40,8 @@ function pathToVector(path) {
 function generateRandomPath(pos) {
     var dx = Math.floor(Math.random() * 18);
     var dy = Math.floor(Math.random() * 28);
+    dx = 8;
+    dy = 27;
     var destination = new Vector2(dx, dy);
     var gridBackup = grid.clone();
     var path = finder.findPath(pos.x, pos.y, destination.x, destination.y, gridBackup);
@@ -49,7 +51,7 @@ function generateRandomPath(pos) {
 function spawnMinion() {
     var rx = Math.floor(Math.random() * 18);
     var ry = Math.floor(Math.random() * 28);
-    var randomSpawn = new Vector2(rx, ry);
+    var randomSpawn = new Vector2(8, 0);
     var path = generateRandomPath(randomSpawn);
 
     var minion = {
@@ -86,7 +88,7 @@ function moveLoop() {
                 minions[index].path = generateRandomPath(new Vector2(minions[index].x, minions[index].y));
                 minions[index].i = 0;
                 io.sockets.emit('end', minion.id);
-                //minions.splice(index, 1);
+                minions.splice(index, 1);
             }
         }
     }

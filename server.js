@@ -28,7 +28,7 @@ const updateTime = 10;
 var minions = [];
 
 spawnMinion();
-setInterval(spawnMinion, 1000);
+setInterval(spawnMinion, 100);
 setInterval(moveLoop, 1000 / moveFPS);
 
 setInterval(updateLoop, 1000 / updateTime);
@@ -37,20 +37,24 @@ function pathToVector(path) {
     return new Vector2(path[0], path[1]);
 }
 
-function spawnMinion() {
-    var rx = Math.floor(Math.random() * 18);
-    var ry = Math.floor(Math.random() * 28);
-    var spawnPoint = new Vector2(rx, ry);
-
+function generateRandomPath(pos) {
     var dx = Math.floor(Math.random() * 18);
     var dy = Math.floor(Math.random() * 28);
     var destination = new Vector2(dx, dy);
+    var gridBackup = grid.clone();
+    var path = finder.findPath(pos.x, pos.y, destination.x, destination.y, gridBackup);
+    return path;
+}
 
-    var path = finder.findPath(spawnPoint.x, spawnPoint.y, destination.x, destination.y, grid);
+function spawnMinion() {
+    var rx = Math.floor(Math.random() * 18);
+    var ry = Math.floor(Math.random() * 28);
+    var randomSpawn = new Vector2(rx, ry);
+    var path = generateRandomPath(randomSpawn);
 
     var minion = {
         id: shortid.generate(),
-        ...spawnPoint,
+        ...randomSpawn,
         i: 0,
         path,
     };
@@ -61,7 +65,7 @@ function updateLoop() {
     if (minions.length > 0) {
         var clonedArray = JSON.parse(JSON.stringify(minions))
         clonedArray.forEach(m => delete m.path);
-        console.log(clonedArray);
+        console.log(minions.length);
         io.sockets.emit('update', clonedArray);
     }
 }
@@ -79,8 +83,10 @@ function moveLoop() {
             // reached end
             var index = minions.indexOf(minion);
             if (index > -1) {
+                minions[index].path = generateRandomPath(new Vector2(minions[index].x, minions[index].y));
+                minions[index].i = 0;
                 io.sockets.emit('end', minion.id);
-                minions.splice(index, 1);
+                //minions.splice(index, 1);
             }
         }
     }

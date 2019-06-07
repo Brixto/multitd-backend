@@ -14,13 +14,13 @@ const Vector2 = require('./vector2');
 var grid = new PF.Grid(18, 28);
 var finder = new PF.AStarFinder({ allowDiagonal: true });
 
-const moveFPS = 60;
+const moveFPS = 1;
 const updateTime = 10;
 
 var minions = [];
 
 spawnMinion();
-setInterval(spawnMinion, 1000);
+//setInterval(spawnMinion, 1000);
 
 var lastUpdate = Date.now();
 setInterval(moveLoop, 1000 / moveFPS);
@@ -73,7 +73,7 @@ function moveLoop() {
     for (var minion of minions) {
         if (minion.i < minion.path.length) {
             var nextPoint = pathToVector(minion.path[minion.i])
-            Vector2.moveTowards(minion, nextPoint, 0.002 * dt);
+            Vector2.moveTowards3(minion, nextPoint, 0.002 * dt);
 
             if (minion.x == nextPoint.x && minion.y == nextPoint.y) {
                 minion.i += 1;
